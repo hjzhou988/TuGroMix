@@ -1,0 +1,95 @@
+---
+title: "TuGroMix"
+author: "Huajun Zhou"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{TuGroMix}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+# devtools::load_all()
+```
+
+This TuGroMix package uses linear mixed-effects model (LMM) and generalized additive mixed-effects model (GAMM) to model transplanted tumor growth in research mice. Compared to the widely-used tumor growth inhibition (TGI), which is based on a single-day's tumor volumes, LMM and GAMM took  advantage of full time-range of observation data and calculate drug-treatment effect on tumor growth rate, which is a more accurate statistic to describe the mean difference in tumor growth. 
+
+
+## Usage
+
+The basic usage of this package is to estimate tumor growth rate difference between experimental groups, and how significant is that the difference does not equal to 0. It can be used as an alternative to the usual t-test/ANOVA for hypothesis testing. lmmFit() and gamFit() are used for this purpose.
+
+The more important usage of this package is to search for genes that are associated with drug treatment efficacy. It can be mutation status (0,1) or expression level (log2TPM) of a gene that affect drug efficacy. lmmscreen() and gamscreen() are used for this purpose.
+
+## Convert data
+Mouse tumor growth data are usually presented with each mouse as a row, and each time point as a column. This data format needs to be converted to a "long" format, before it can be used as an input data matrix for LMM and GAMM model building. wide2long() provides with this function.
+
+Firstly, we load required packages
+```{r}
+library(TuGroMix)
+```
+
+We read in our example data, and convert it to long format
+```{r}
+data(tv_data)
+
+tv_wide.long = wide2long(tv_data = tv_wide,id.vars = c("Group","Animal.No."))
+```
+
+## Test whether there is significant difference in tumor growth rates between groups 
+Then use lmmFit to test growth rate difference between groups.
+```{r}
+lmmfit.res = lmmFit(tv.data = tv_wide.long,ref.group = "G1",group.id.var = "Group",mouse.id.var = "Animal.No.")
+
+knitr::kable(lmmfit.res$coefs)
+```
+
+## Visualize data points and fitted lines.
+Plot lmmFit result
+```{r}
+plot(lmmfit.res)
+```
+
+## Test by GAMM
+use gamFit to test growth rate difference between groups.
+```{r}
+gamfit.res = gamFit(tv.data = tv_wide.long,ref.group = "G1",group.id.var = "Group",mouse.id.var = "Animal.No.")
+
+knitr::kable(gamfit.res$coefs)
+```
+
+## Visualize data points and fitted smooth curves
+Plot gamFit result
+```{r}
+plot(gamfit.res)
+```
+
+## Screening for biomarkers that affect drug efficacy by LMM
+```{r}
+data(screen) # load screen data, which includes tv data and gene expression data. Gene expression in log2TPM is recommended. If you have log2FPKM or FPKM data, you can convert it to log2TPM using fpkm2tpm() function.
+
+## The gene expression is usually in the form of each row being a gene, and each column being a biological sample (mouse model). Transpose the gene expression data first, so that each column is a gene and each row is mouse model, using transpose() function.
+expre.screen.X =  transpose(data.thin = expres.screen, gene.id = rownames(expres.screen))
+
+screen.res = lmmscreen(tv.data = tv.data.screen, ref.group = "Vehicle",model.var = Model, group.var = Trt, mouse.id.var = Mouse.ID,
+          gene.expr.data = expre.screen.X)
+
+## screening result is ordered by p-values.
+knitr::kable(screen.res)
+```
+
+## Screen for biomarkers that affect drug efficacy by GAMM
+```{r}
+## Use GAMM instead of LMM for biomarker screening. It may take a long time (10 to 20 times more time than LMM)
+gam.screen.res = gamscreen(tv.data = tv.data.screen, ref.group = "Vehicle",model.var = Model, group.var = Trt, mouse.id.var = Mouse.ID,
+          gene.expr.data = expre.screen.X)
+
+## screening result is ordered by p-values.
+knitr::kable(gam.screen.res)
+```
+

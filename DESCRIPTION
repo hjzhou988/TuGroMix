@@ -1,0 +1,42 @@
+Type: Package
+Package: TuGroMix
+Title: Statistical Analysis of Mouse Tumor Growth Curves Based on
+    Mixed-Effects Models
+Version: 0.1.2
+Author: Huajun Zhou
+Maintainer: Huajun Zhou <hjzhou988@gmail.com>
+Description: The package uses linear mixed-effects model (LMM) and
+    generalized additive model (GAM) to test the significance of
+    anti-cancer drug treatment effect on mouse tumor growth curves
+    (primary tumor-derived xenografted mice (PDX), cancer cell
+    line-derived xenografted mice (CDX), etc). It can also be used for
+    biomarker discovery, given drug testing results in different PDXs
+    (CDXs), along with known gene expression/mutation data in these PDXs
+    (CDXs). The biomarker discovery can take a long time, since it's
+    screening thousands of genes. The package also integrates a
+    multi-threading function, so that it can be run on a computing
+    cluster.
+License: GPL (>= 3)
+Depends: R (>= 3.5.0)
+Imports: 
+    doParallel,
+    dplyr,
+    foreach,
+    gamm4,
+    ggeffects,
+    ggplot2,
+    lmerTest,
+    magrittr,
+    parallel,
+    reshape2,
+    rlang,
+    tidymv,
+    tidyr
+Suggests: 
+    knitr,
+    rmarkdown
+VignetteBuilder: 
+    knitr
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 7.2.3
