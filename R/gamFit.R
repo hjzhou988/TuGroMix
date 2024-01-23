@@ -13,7 +13,7 @@
 #'
 #' @return An S3 object of class "gamfit" which stores coefficient tables and a "gam" object of the fitted GAM model.
 #'
-#' @export
+#'
 #'
 
 

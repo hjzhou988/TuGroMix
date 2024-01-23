@@ -2,7 +2,7 @@ Type: Package
 Package: TuGroMix
 Title: Statistical Analysis of Mouse Tumor Growth Curves Based on
     Mixed-Effects Models
-Version: 0.1.2
+Version: 1.0.0
 Author: Huajun Zhou
 Maintainer: Huajun Zhou <hjzhou988@gmail.com>
 Description: The package uses linear mixed-effects model (LMM) and

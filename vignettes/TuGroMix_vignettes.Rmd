@@ -55,19 +55,14 @@ Plot lmmFit result
 plot(lmmfit.res)
 ```
 
-## Test by GAMM
-use gamFit to test growth rate difference between groups.
+## Test by eGR difference
+use eGR difference to test growth rate difference between groups.
 ```{r}
-gamfit.res = gamFit(tv.data = tv_wide.long,ref.group = "G1",group.id.var = "Group",mouse.id.var = "Animal.No.")
+eGR.res = get_Model_eGR(tv.data = tv_wide.long,ref.group = "G1",group.id.var = "Group",mouse.id.var = "Animal.No.", time.var = "Day",tv.var = "TV",ci = T,type = "difference")
 
-knitr::kable(gamfit.res$coefs)
+knitr::kable(eGR.res)
 ```
 
-## Visualize data points and fitted smooth curves
-Plot gamFit result
-```{r}
-plot(gamfit.res)
-```
 
 ## Screening for biomarkers that affect drug efficacy by LMM
 ```{r}
@@ -76,20 +71,32 @@ data(screen) # load screen data, which includes tv data and gene expression data
 ## The gene expression is usually in the form of each row being a gene, and each column being a biological sample (mouse model). Transpose the gene expression data first, so that each column is a gene and each row is mouse model, using transpose() function.
 expre.screen.X =  transpose(data.thin = expres.screen, gene.id = rownames(expres.screen))
 
-screen.res = lmmscreen(tv.data = tv.data.screen, ref.group = "Vehicle",model.var = Model, group.var = Trt, mouse.id.var = Mouse.ID,
-          gene.expr.data = expre.screen.X)
+screen.res = lmmscreen(tv.data = tv.data.screen, ref.group = "Vehicle",
+                       model.var = "Model", 
+                       group.var = "Trt", 
+                       mouse.id.var = "Mouse.ID",
+                       time.var = "Day",
+                       tv.var = "TV",
+                       gene.expr.data = expre.screen.X)
 
 ## screening result is ordered by p-values.
 knitr::kable(screen.res)
 ```
 
-## Screen for biomarkers that affect drug efficacy by GAMM
+## Screen for biomarkers that affect drug efficacy by eGR difference
 ```{r}
-## Use GAMM instead of LMM for biomarker screening. It may take a long time (10 to 20 times more time than LMM)
-gam.screen.res = gamscreen(tv.data = tv.data.screen, ref.group = "Vehicle",model.var = Model, group.var = Trt, mouse.id.var = Mouse.ID,
-          gene.expr.data = expre.screen.X)
+## Use eGR difference for biomarker screening. 
+eGR.screen.res = eGRscreen(tv.data = tv.data.screen, ref.group = "Vehicle",model.var = "Model", group.var = "Trt", mouse.id.var = "Mouse.ID", time.var="Day", tv.var="TV", gene.expr.data = expre.screen.X, type = "diff")
 
-## screening result is ordered by p-values.
-knitr::kable(gam.screen.res)
+## eGR result
+knitr::kable(eGR.screen.res$eGR)
 ```
+
+
+```{r}
+## screening result is ordered by p-values.
+knitr::kable(eGR.screen.res$cor)
+```
+
+
 

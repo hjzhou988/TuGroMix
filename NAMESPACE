@@ -2,9 +2,10 @@
 
 S3method(plot,gamfit)
 S3method(plot,lmmfit)
+export(eGRscreen)
 export(fpkm2tpm)
-export(gamFit)
-export(gamscreen)
+export(get_Model_eGR)
+export(get_eGR)
 export(lmmFit)
 export(lmmscreen)
 export(transpose)

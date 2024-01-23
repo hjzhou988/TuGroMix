@@ -16,7 +16,7 @@
 #' The first column must be the sample names.
 #'
 #'
-#' @export
+#'
 #'
 gamscreen = function(tv.data, ref.group, model.var, group.var, mouse.id.var,gene.expr.data){
   # tv.data = read.csv("../../Irinotecan_for_validation/TV_data_combined.csv",row.names = 1)
