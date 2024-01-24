@@ -1,12 +1,12 @@
 Type: Package
 Package: TuGroMix
 Title: Statistical Analysis of Mouse Tumor Growth Curves Based on
-    Mixed-Effects Models
-Version: 1.0.0
+    Linear Mixed-Effects Model (LMM) and exponential Growth Rate (eGR)
+Version: 1.0.1
 Author: Huajun Zhou
 Maintainer: Huajun Zhou <hjzhou988@gmail.com>
 Description: The package uses linear mixed-effects model (LMM) and
-    generalized additive model (GAM) to test the significance of
+    exponential Growth Rate (eGR) to test the significance of
     anti-cancer drug treatment effect on mouse tumor growth curves
     (primary tumor-derived xenografted mice (PDX), cancer cell
     line-derived xenografted mice (CDX), etc). It can also be used for
