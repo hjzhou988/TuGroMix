@@ -51,13 +51,13 @@ eGRscreen = function(tv.data, ref.group, model.var, group.var, mouse.id.var,time
   # spearman correlation
   base::colnames(gene.expr.data)[1]="Model"
   auc.res.med.expr = auc.res.df %>% dplyr::left_join(gene.expr.data, by = "Model")
-  genes = base::names(auc.res.med.expr)[-(1:5)]
+  genes = base::names(auc.res.med.expr)[-(1:6)]
 
   numCores <- parallel::detectCores()
   doParallel::registerDoParallel(numCores-1)
   cor.res = foreach(i = 1:length(genes)) %dopar% {
     # i = 1
-    r = stats::cor.test(x = auc.res.med.expr[[2]], # either difference or ratio
+    r = stats::cor.test(x = auc.res.med.expr[[3]], # either difference or ratio
                  y = auc.res.med.expr[[genes[i]]],
                  method = "spearman",exact = F)
     base::list(Gene = genes[i],rho = r$estimate, p.val = r$p.value)
