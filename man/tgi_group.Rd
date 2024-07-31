@@ -4,30 +4,18 @@
 \alias{tgi_group}
 \title{Calculate tumor growth inhibition for treatment groups}
 \usage{
-tgi_group(
-  tv.data,
-  ref.group,
-  def = 3,
-  group.id.var,
-  mouse.id.var,
-  time.var,
-  tv.var
-)
+tgi_group(tv.data, ref.group, grp, def = 6, ci = F)
 }
 \arguments{
 \item{tv.data}{a data frame containing tumor volume data in long format}
 
 \item{ref.group}{the reference group}
 
+\item{grp}{the group to calculate TGI for}
+
 \item{def}{definition of TGI}
 
-\item{group.id.var}{The name of the "group" column of your input data. Required.}
-
-\item{mouse.id.var}{The name of the "mouse.id" column of your input data. Required.}
-
-\item{time.var}{The name of the "day" column of your input data. Required.}
-
-\item{tv.var}{The name of the "tumor volume" column of your input data. Required.}
+\item{ci}{whether to do 1000 times bootstrapping to determine the 95 confidence interval for the calculated TGI.}
 }
 \value{
 a list of TGI information

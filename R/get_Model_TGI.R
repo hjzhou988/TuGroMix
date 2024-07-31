@@ -14,7 +14,7 @@
 #' @importFrom magrittr %>%
 #' @export
 #'
-get_Model_TGI = function(tv.data,ref.group,def=3, group.id.var, mouse.id.var,time.var,tv.var,ci = F){
+get_Model_TGI = function(tv.data,ref.group,def=6, group.id.var, mouse.id.var,time.var,tv.var,ci = F){
   # proj_lst = split(tv_long, tv_long$Model)
   # proj_lst = split(tv.data.screen, tv.data.screen$Model)
   # tv.data = proj_lst2[[1]];ref.group="Vehicle";group.id.var="Trt";mouse.id.var="Mouse.ID";time.var="Day";tv.var="TV"
@@ -38,8 +38,11 @@ get_Model_TGI = function(tv.data,ref.group,def=3, group.id.var, mouse.id.var,tim
 
   # tgi_df=base::as.data.frame(base::do.call(base::rbind,base::lapply(grps,function(g) tgi_group(tv.data,ref.group,g,def=def))))
   # tgi_df$Model=proj
-  tgi_df=dplyr::bind_rows(base::lapply(grps,function(g) tgi_group(tv.data,ref.group,g,def=def)))
-  tgi_df
+  tgi_df=dplyr::bind_rows(base::lapply(grps,function(g) {
+    tgi_group(tv.data,ref.group,g,def=def,ci = ci)
+    })
+  )
+
   if (length(tgi_df)==0) return(NULL) else tgi_df
 
   #   auc_mouse=base::do.call(base::rbind,base::lapply(mouses,get_eGR))

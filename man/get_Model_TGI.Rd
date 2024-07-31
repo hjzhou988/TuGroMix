@@ -7,7 +7,7 @@
 get_Model_TGI(
   tv.data,
   ref.group,
-  def = 3,
+  def = 6,
   group.id.var,
   mouse.id.var,
   time.var,
