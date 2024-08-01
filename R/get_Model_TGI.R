@@ -18,6 +18,7 @@ get_Model_TGI = function(tv.data,ref.group,def=6, group.id.var, mouse.id.var,tim
   # proj_lst = split(tv_long, tv_long$Model)
   # proj_lst = split(tv.data.screen, tv.data.screen$Model)
   # tv.data = proj_lst2[[1]];ref.group="Vehicle";group.id.var="Trt";mouse.id.var="Mouse.ID";time.var="Day";tv.var="TV"
+  # tv.data = readRDS("~/Documents/VCG/2024-8-1_example_data_for_tugromix_tgi_test_44.rds");ref.group = "Grp-1";def = 6;group.id.var = "Grp.Name";mouse.id.var = "Mouse";time.var = "Day";tv.var = "TV";ci = T
   tv.data = dplyr::rename(tv.data, Group = {{group.id.var}}, Mouse = {{mouse.id.var}}, Day = {{time.var}}, TV = {{tv.var}})
 
   tv.data = tv.data[,c("Group","Mouse","Day","TV")]
@@ -31,7 +32,7 @@ get_Model_TGI = function(tv.data,ref.group,def=6, group.id.var, mouse.id.var,tim
 
   tv_var='TV'
 
-  tv.data$RTV=ifelse(tv.data$TV0==0,NA,tv.data$TV/tv.data$TV0)
+  tv.data$RTV=ifelse(tv.data$TV0==0,tv.data$TV,tv.data$TV/tv.data$TV0)
   tv.data$DeltaTV=tv.data$TV-tv.data$TV0
   grps=base::unique(tv.data$Group)
   grps=base::sort(grps[grps!=ref.group])

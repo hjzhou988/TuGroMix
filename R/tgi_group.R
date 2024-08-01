@@ -55,20 +55,25 @@ tgi_group = function(tv.data,ref.group,grp,def=6, ci = F){ #,group.id.var,mouse.
   day_n=base::table(ds$Group,ds$Day)
   day_pct=day_n/day_n[,1]
   xx=base::apply(day_pct,2,function(v) all(v>=0.6))
-  sel_day=base::max(base::as.numeric(base::names(xx[xx])))
+  sel_day=base::max(base::as.numeric(base::names(xx[xx])),na.rm = T) # add na.rm = T, just in case it returns NA for sel_day
   ds=dplyr::filter(ds,Day==sel_day)
-  ms=base::tapply(ds[,tv_var,drop = T],ds$Group,mean)
+  ms=base::tapply(ds[,tv_var,drop = T],ds$Group,mean,na.rm = T) # just in case there is NA in RTV.
   ms1=ms[-which(names(ms)==ref.group)]/ms[ref.group]
   if(def %in% c(3,5,6)) ms1 = 1-ms1 # added 6
-  if(ci == F) list('Group'=grp,'TGI'=as.numeric(ms1),'Day'=sel_day)
-  else {
+  if(ci == F) list('Group'=grp,'TGI'=as.numeric(ms1),'Day'=sel_day) else {
+    # tic()
     res = base::lapply(1:1000,function(i){
-      ds.s = ds %>% dplyr::group_by(Group) %>% dplyr::slice_sample(prop = 1, replace = T)
-      ms=base::tapply(ds.s[,tv_var,drop = T],ds.s$Group,mean)
-      ms.b=ms[-which(names(ms)==ref.group)]/ms[ref.group]
+      # ds.s = ds %>% dplyr::group_by(Group) %>% dplyr::slice_sample(prop = 1, replace = T)
+      sampled = tapply(ds[[tv_var]], ds$Group, sample,replace = TRUE)
+
+      # ms=base::tapply(ds.s[,tv_var,drop = T],ds.s$Group,mean)
+      ms = lapply(sampled, mean, na.rm = T)
+      # ms.b=ms[-which(names(ms)==ref.group)]/ms[ref.group]
+      ms.b=ms[[-which(names(ms)==ref.group)]]/ms[[ref.group]]
       if(def %in% c(3,5,6)) ms.b = 1-ms.b # added 6
       ms.b
     })
+    # toc()
     qts = stats::quantile(base::unlist(res),c(0.025, 0.975))
     base::list('Group'=grp,'TGI'=as.numeric(ms1),'95_CI_lower_bound'= qts[[1]],'95_CI_upper_bound'= qts[[2]],'Day'=sel_day)
   }
