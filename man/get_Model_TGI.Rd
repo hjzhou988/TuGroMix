@@ -7,18 +7,22 @@
 get_Model_TGI(
   tv.data,
   ref.group,
+  type = c("geometric", "arithmetic"),
   def = 6,
   group.id.var,
   mouse.id.var,
   time.var,
   tv.var,
-  ci = F
+  ci = F,
+  bound = 90
 )
 }
 \arguments{
 \item{tv.data}{tumor volume data in long format, containing columns "Group","Mouse","Day","TV"}
 
 \item{ref.group}{the reference group in eGR ratio or difference}
+
+\item{type}{the type of the mean of TGI, choose from "arithmetic" and "geometric".}
 
 \item{def}{definition of TGI. 1: TV_trt/TV_ctl, 2: DeltaTV_trt/DeltaTV_ctl, 3: 1-DeltaTV_trt/DeltaTV_ctl, 4:RTV_trt/RTV_ctl, 5: 1-TV_trt/TV_ctl, 6: 1-RTV_trt/RTV_ctl}
 
@@ -31,6 +35,8 @@ get_Model_TGI(
 \item{tv.var}{The name of the "tumor volume" column of your input data. Required.}
 
 \item{ci}{a logical variable to do bootstrapping for confidence interval}
+
+\item{bound}{a number for the confidence interval boundary. Suggest 90 or 95.}
 }
 \value{
 a tibble containing TGI for each treatment group

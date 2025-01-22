@@ -4,7 +4,15 @@
 \alias{tgi_group}
 \title{Calculate tumor growth inhibition for treatment groups}
 \usage{
-tgi_group(tv.data, ref.group, grp, def = 6, ci = F)
+tgi_group(
+  tv.data,
+  ref.group,
+  grp,
+  type = c("geometric", "arithmetic"),
+  def = 6,
+  ci = F,
+  bound = 90
+)
 }
 \arguments{
 \item{tv.data}{a data frame containing tumor volume data in long format}
@@ -13,9 +21,13 @@ tgi_group(tv.data, ref.group, grp, def = 6, ci = F)
 
 \item{grp}{the group to calculate TGI for}
 
+\item{type}{the type of the mean of TGI, choose from "arithmetic" and "geometric".}
+
 \item{def}{definition of TGI}
 
 \item{ci}{whether to do 1000 times bootstrapping to determine the 95 confidence interval for the calculated TGI.}
+
+\item{bound}{a number for the confidence interval boundary. Suggest 90 or 95.}
 }
 \value{
 a list of TGI information
