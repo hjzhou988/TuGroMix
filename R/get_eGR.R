@@ -27,6 +27,6 @@ get_eGR=function(df){
   }else{
     eGR=NA
   }
-  auc_df=base::data.frame('Mouse'=base::unique(df$Mouse),'eGR'=eGR,'Day'=day_v[n1],'Group'=base::unique(base::as.character(df$Group)))
+  auc_df=base::data.frame('Mouse'=base::unique(df$Mouse),'eGR'=eGR,'Day'=day_v[n1]) #,'Group'=base::unique(base::as.character(df$Group))
   auc_df
 }

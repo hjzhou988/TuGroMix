@@ -11,7 +11,7 @@
 #' @export
 #'
 get_group_eGR=function(tv.data,mouse.id.var,time.var,tv.var,ci = F,nrep=1000){
-  # tv.data = tv_long_test;  mouse.id.var = "Mouse.ID";time.var = "Day";tv.var = "TV";ci=T;nrep = 1000
+  # tv.data = ind_study [[1]];  mouse.id.var = "Mouse";time.var = "Day";tv.var = "TV";ci=T;nrep = 1000
   tv.data = dplyr::rename(tv.data,  Mouse = {{mouse.id.var}}, Day = {{time.var}}, TV = {{tv.var}})
   tv.data = tv.data[,c("Mouse","Day","TV")]
   tv.data = tv.data[stats::complete.cases(tv.data),]
