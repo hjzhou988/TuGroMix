@@ -15,7 +15,7 @@ get_group_eGR(tv.data, mouse.id.var, time.var, tv.var, ci = F, nrep = 1000)
 
 \item{tv.var}{The name of the "tumor volume" column of your input data. Required.}
 
-\item{ci}{a logical variable to do bootstrapping for confidence interval}
+\item{ci}{a logical variable to do bootstrapping for 90% confidence interval}
 
 \item{nrep}{the number of bootstrapping for confidence interval}
 }

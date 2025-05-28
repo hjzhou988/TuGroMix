@@ -1,6 +1,6 @@
 #' calculate eGR for a single tumor
 #'
-#' @param df a single tumor volume data frame in long format, which contains columns  "Group","Mouse","Day", "TV"
+#' @param df a single tumor volume data frame in long format, which contains columns  "Group","Mouse","Day", "TV" with at least two time points
 #' @return a data frame of eGR information
 #' @export
 #'
@@ -17,7 +17,7 @@ get_eGR=function(df){
   # TV_v = df$TV
   n1=base::length(day_v) # why n and n1? what's the difference?
   AUC=0
-  if(n1>=4){
+  if(n1>=2){
     for(i in 2:n1){
       AUC = AUC+(day_v[i]-day_v[i-1])*(TV_v[i]+TV_v[i-1])/2
     }

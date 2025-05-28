@@ -7,7 +7,7 @@
 get_eGR(df)
 }
 \arguments{
-\item{df}{a single tumor volume data frame in long format, which contains columns  "Group","Mouse","Day", "TV"}
+\item{df}{a single tumor volume data frame in long format, which contains columns  "Group","Mouse","Day", "TV" with at least two time points}
 }
 \value{
 a data frame of eGR information
