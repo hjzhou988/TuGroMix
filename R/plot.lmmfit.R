@@ -12,7 +12,7 @@ plot.lmmfit<- function(object,show.points = T){ # x is an object of from lmmFit
   if (!inherits(object, "lmmfit"))
     stop("plot.lmmfit can only be used to plot lmmfit objects")
   dat = object$mer@frame
-  mydf = ggeffects::ggpredict(object$mer,terms = c("Day","Group"),back.transform = F)
+  mydf = ggeffects::ggpredict(object$mer,terms = c("Day","Group"),back_transform = F)
   base::names(mydf)[ncol(mydf)]="Group"
   # dat$predicted = predict(res.lmmfit$mer,re.form = NA)
   # ggplot(dat)+geom_line(aes(x=Day,y=predicted,color = Group))+geom_point(aes(x=x, y = predicted,color = group),data = mydf)

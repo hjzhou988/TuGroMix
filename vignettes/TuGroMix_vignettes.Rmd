@@ -17,14 +17,14 @@ knitr::opts_chunk$set(
 # devtools::load_all()
 ```
 
-This TuGroMix package uses linear mixed-effects model (LMM) and generalized additive mixed-effects model (GAMM) to model transplanted tumor growth in research mice. Compared to the widely-used tumor growth inhibition (TGI), which is based on a single-day's tumor volumes, LMM and GAMM took  advantage of full time-range of observation data and calculate drug-treatment effect on tumor growth rate, which is a more accurate statistic to describe the mean difference in tumor growth. 
+This TuGroMix package uses linear mixed-effects model (LMM) and exponential growth rate (eGR) to model transplanted tumor growth in research mice. Compared to the widely-used tumor growth inhibition (TGI), which is based on a single-day's tumor volumes, LMM and eGR took advantage of full time-range of observation data and calculate drug-treatment effect on tumor growth rate, which is a more accurate statistic to describe the mean difference in tumor growth. 
 
 
 ## Usage
 
-The basic usage of this package is to estimate tumor growth rate difference between experimental groups, and how significant is that the difference does not equal to 0. It can be used as an alternative to the usual t-test/ANOVA for hypothesis testing. lmmFit() and gamFit() are used for this purpose.
+The basic usage of this package is to estimate tumor growth rate difference between experimental groups, and how significant is that the difference does not equal to 0. It can be used as an alternative to the usual t-test/ANOVA for hypothesis testing. lmmFit() and get_Model_eGR() are used for this purpose.
 
-The more important usage of this package is to search for genes that are associated with drug treatment efficacy. It can be mutation status (0,1) or expression level (log2TPM) of a gene that affect drug efficacy. lmmscreen() and gamscreen() are used for this purpose.
+The more important usage of this package is to search for genes that are associated with drug treatment efficacy. It can be mutation status (0,1) or expression level (log2TPM) of a gene that affect drug efficacy. lmmscreen() and eGRscreen() are used for this purpose.
 
 ## Convert data
 Mouse tumor growth data are usually presented with each mouse as a row, and each time point as a column. This data format needs to be converted to a "long" format, before it can be used as an input data matrix for LMM and GAMM model building. wide2long() provides with this function.
@@ -63,6 +63,22 @@ eGR.res = get_Model_eGR(tv.data = tv_wide.long,ref.group = "G1",group.id.var = "
 knitr::kable(eGR.res)
 ```
 
+## Screen for biomarkers that affect drug efficacy by eGR difference
+
+```{r}
+## Use eGR difference for biomarker screening. 
+eGR.screen.res = eGRscreen(tv.data = tv.data.screen, ref.group = "Vehicle",model.var = "Model", group.var = "Trt", mouse.id.var = "Mouse.ID", time.var="Day", tv.var="TV", gene.expr.data = expre.screen.X, type = "diff")
+
+## eGR result
+knitr::kable(eGR.screen.res$eGR)
+```
+
+
+
+```{r}
+## screening result is ordered by p-values.
+knitr::kable(eGR.screen.res$cor)
+```
 
 ## Screening for biomarkers that affect drug efficacy by LMM
 ```{r}
@@ -83,20 +99,7 @@ screen.res = lmmscreen(tv.data = tv.data.screen, ref.group = "Vehicle",
 knitr::kable(screen.res)
 ```
 
-## Screen for biomarkers that affect drug efficacy by eGR difference
-```{r}
-## Use eGR difference for biomarker screening. 
-eGR.screen.res = eGRscreen(tv.data = tv.data.screen, ref.group = "Vehicle",model.var = "Model", group.var = "Trt", mouse.id.var = "Mouse.ID", time.var="Day", tv.var="TV", gene.expr.data = expre.screen.X, type = "diff")
 
-## eGR result
-knitr::kable(eGR.screen.res$eGR)
-```
-
-
-```{r}
-## screening result is ordered by p-values.
-knitr::kable(eGR.screen.res$cor)
-```
 
 
 
