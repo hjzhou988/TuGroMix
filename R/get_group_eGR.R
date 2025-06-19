@@ -32,7 +32,7 @@ get_group_eGR=function(tv.data,mouse.id.var,time.var,tv.var,ci = F,nrep=1000){
                                 replace = T)
         auc_boot_med = median(auc_boot,na.rm = T)
       })
-      cis = stats::quantile(boot.res, c(0.05, 0.95))
+      cis = stats::quantile(boot.res, c(0.05, 0.95),na.rm = T)
     }
   }
   eGR.res.df = data.frame(Median.eGR = med.eGR, "Lower.Bound.90CI"=cis[1],"Upper.Bound.90CI"=cis[2],row.names = NULL)
