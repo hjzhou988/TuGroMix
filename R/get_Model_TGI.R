@@ -36,6 +36,7 @@ get_Model_TGI = function(tv.data,ref.group,type = c("geometric","arithmetic"),de
 
   tv.data$RTV=ifelse(tv.data$TV0==0,tv.data$TV,tv.data$TV/tv.data$TV0)
   tv.data$DeltaTV=tv.data$TV-tv.data$TV0
+  tv.data$logRTV = log(tv.data$TV+1) - log(tv.data$TV0+1) # ifelse(tv.data$TV0 == 0, tv.data$TV, tv.data$TV/tv.data$TV0)
   grps=base::unique(tv.data$Group)
   grps=base::sort(grps[grps!=ref.group])
 

@@ -65,36 +65,52 @@ tgi_group = function(tv.data,ref.group,grp,type = c("geometric","arithmetic"),de
   if (type=="arithmetic"){
     ms=tapply(ds[[tv_var]],ds$Group,mean,na.rm = T)
   }else if(type=="geometric"){
+    if(tv_var=="RTV"){
+      ms = tapply(ds[["logRTV"]], ds$Group, function(x) exp(mean(x, na.rm = T)))
+    }else{
     ms=tapply(ds[[tv_var]],ds$Group, function(x) exp(mean(log(x+1),na.rm =T)))
+    }
   }
 
   ms1=ms[-which(names(ms)==ref.group)]/ms[ref.group]
 
   if(def %in% c(3,5,6)) ms1 = 1-ms1 # added 6
-  if(ci == F) list('Group'=grp,'TGI'=as.numeric(ms1),'Day'=sel_day) else {
-    # tic()
-    res = base::lapply(1:1000,function(i){
-      # ds.s = ds %>% dplyr::group_by(Group) %>% dplyr::slice_sample(prop = 1, replace = T)
-      sampled = tapply(ds[[tv_var]], ds$Group, sample,replace = TRUE)
+  if(ci == F) {
 
-      # ms=base::tapply(ds.s[,tv_var,drop = T],ds.s$Group,mean)
+    list('Group'=grp,'TGI'=as.numeric(ms1),'Day'=sel_day)
+    }else {
+      if (any(day_n[,1]==1)) {
+        list('Group'=grp,'TGI'=as.numeric(ms1),'Day'=sel_day)
+      }else{
+        # tic()
+        res = base::lapply(1:1000,function(i){
+          # ds.s = ds %>% dplyr::group_by(Group) %>% dplyr::slice_sample(prop = 1, replace = T)
 
-      if (type=="arithmetic"){
-        ms = lapply(sampled, mean, na.rm = T)
-      }else if(type=="geometric"){
-        ms = lapply(sampled, function(x) exp(mean(log(x+1),na.rm =T)))
+          if(tv_var=="RTV" & type =="geometric" ){
+            sampled = tapply(ds[["logRTV"]], ds$Group, sample,replace = TRUE)
+            ms = lapply(sampled, function(x) exp(mean(x,na.rm =T)))
+          }else{
+            sampled = tapply(ds[[tv_var]], ds$Group, sample,replace = TRUE)
+            if (type=="arithmetic"){
+              ms = lapply(sampled, mean, na.rm = T)
+            }else if(type=="geometric"){
+              ms = lapply(sampled, function(x) exp(mean(log(x+1),na.rm =T)))
+            }
+          }
+          # ms=base::tapply(ds.s[,tv_var,drop = T],ds.s$Group,mean)
+
+
+          # ms.b=ms[-which(names(ms)==ref.group)]/ms[ref.group]
+          ms.b=ms[[-which(names(ms)==ref.group)]]/ms[[ref.group]]
+          if(def %in% c(3,5,6)) ms.b = 1-ms.b # added 6
+          ms.b
+        })
+        # toc()
+        qts = stats::quantile(base::unlist(res),c((100-bound)/200, (bound + (100-bound)/2)/100))
+        out = base::list('Group'=grp,'TGI'=as.numeric(ms1),'3' = qts[[1]],'4'= qts[[2]],'Day'=sel_day)
+        names(out)[3]=paste0(bound,"_CI_lower_bound")
+        names(out)[4]=paste0(bound,"_CI_upper_bound")
+        out
       }
-
-      # ms.b=ms[-which(names(ms)==ref.group)]/ms[ref.group]
-      ms.b=ms[[-which(names(ms)==ref.group)]]/ms[[ref.group]]
-      if(def %in% c(3,5,6)) ms.b = 1-ms.b # added 6
-      ms.b
-    })
-    # toc()
-    qts = stats::quantile(base::unlist(res),c((100-bound)/200, (bound + (100-bound)/2)/100))
-    out = base::list('Group'=grp,'TGI'=as.numeric(ms1),'3' = qts[[1]],'4'= qts[[2]],'Day'=sel_day)
-    names(out)[3]=paste0(bound,"_CI_lower_bound")
-    names(out)[4]=paste0(bound,"_CI_upper_bound")
-    out
   }
 }
